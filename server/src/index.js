@@ -20,12 +20,34 @@ const KNOCKOUT_ORDER = [
   "FINAL",
 ];
 
+// The sample fixtures are authored around this date (its live matchday). When
+// serving sample data we shift every fixture by whole days so the "live"
+// matchday always lands on today — keeping the no-API-key demo current.
+const SAMPLE_ANCHOR = Date.UTC(2026, 5, 17);
+
+function localizeSampleMatches(payload) {
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const offsetMs = todayUTC - SAMPLE_ANCHOR;
+  if (offsetMs === 0) return payload;
+  return {
+    matches: payload.matches.map((m) => ({
+      ...m,
+      utcDate: new Date(new Date(m.utcDate).getTime() + offsetMs).toISOString(),
+    })),
+  };
+}
+
 // Loads a raw upstream payload, falling back to bundled sample data whenever
 // there's no API key or the upstream call fails. `source` lets the UI show a
 // "sample data" banner.
+function samplePayload(kind) {
+  return kind === "matches" ? localizeSampleMatches(SAMPLE.matches) : SAMPLE[kind];
+}
+
 async function loadRaw(kind) {
   if (!hasApiKey()) {
-    return { payload: SAMPLE[kind], source: "sample" };
+    return { payload: samplePayload(kind), source: "sample" };
   }
   try {
     if (kind === "matches") {
@@ -36,7 +58,7 @@ async function loadRaw(kind) {
     return { payload, source: "live" };
   } catch (err) {
     console.warn(`[wc] upstream ${kind} failed, serving sample data:`, err.message);
-    return { payload: SAMPLE[kind], source: "sample" };
+    return { payload: samplePayload(kind), source: "sample" };
   }
 }
 

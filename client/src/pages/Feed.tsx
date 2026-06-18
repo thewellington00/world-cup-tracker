@@ -1,8 +1,11 @@
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { LocateFixed } from "lucide-react";
 import { fetchMatches, type Match } from "@/lib/api";
 import { MatchCard } from "@/components/MatchCard";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { dayKey, isToday } from "@/lib/format";
 
 function groupByDay(matches: Match[]) {
@@ -23,6 +26,32 @@ export function Feed() {
     refetchInterval: (query) =>
       query.state.data?.some((m) => m.isLive) ? 30_000 : false,
   });
+
+  const todayRef = useRef<HTMLElement | null>(null);
+  const didScrollRef = useRef(false);
+  const [showJump, setShowJump] = useState(false);
+
+  // Once matches first load, jump the feed to today's section.
+  useEffect(() => {
+    if (!data || didScrollRef.current || !todayRef.current) return;
+    didScrollRef.current = true;
+    todayRef.current.scrollIntoView({ block: "start" });
+  }, [data]);
+
+  // Reveal the floating "jump to today" pill whenever today scrolls off-screen.
+  useEffect(() => {
+    const el = todayRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowJump(!entry.isIntersecting),
+      { rootMargin: "-72px 0px 0px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [data]);
+
+  const scrollToToday = () =>
+    todayRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   if (isLoading) return <FeedSkeleton />;
   if (isError)
@@ -51,12 +80,33 @@ export function Feed() {
       {days.map(([day, dayMatches]) => {
         const today = isToday(dayMatches[0].utcDate);
         return (
-          <section key={day} className="space-y-3">
+          <section
+            key={day}
+            ref={today ? todayRef : undefined}
+            className={cn(
+              "scroll-mt-24 space-y-3",
+              today &&
+                "-mx-3 rounded-xl bg-primary/[0.04] p-3 ring-1 ring-primary/15",
+            )}
+          >
+            {today && (
+              <div className="flex items-center gap-3" aria-hidden>
+                <span className="h-px flex-1 bg-primary/30" />
+                <span className="text-xs font-bold uppercase tracking-widest text-primary">
+                  Today
+                </span>
+                <span className="h-px flex-1 bg-primary/30" />
+              </div>
+            )}
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h2
+                className={cn(
+                  "text-sm font-semibold uppercase tracking-wide",
+                  today ? "text-foreground" : "text-muted-foreground",
+                )}
+              >
                 {day}
               </h2>
-              {today && <Badge variant="default">Today</Badge>}
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {dayMatches.map((m) => (
@@ -66,6 +116,17 @@ export function Feed() {
           </section>
         );
       })}
+
+      {showJump && (
+        <button
+          type="button"
+          onClick={scrollToToday}
+          className="fixed bottom-6 left-1/2 z-20 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-medium shadow-lg transition-colors hover:bg-accent"
+        >
+          <LocateFixed className="h-4 w-4" />
+          Jump to today
+        </button>
+      )}
     </div>
   );
 }

@@ -48,7 +48,7 @@ export function Team() {
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {data.fixtures.map((m) => (
-            <MatchCard key={m.id} match={m} />
+            <MatchCard key={m.id} match={m} showDate />
           ))}
         </div>
       </section>
