@@ -15,6 +15,16 @@ export function dayKey(utcDate: string) {
   });
 }
 
+// Compact date label (e.g. "Sat, Jun 20") for contexts that aren't grouped by
+// day, such as a team's fixture list.
+export function shortDate(utcDate: string) {
+  return new Date(utcDate).toLocaleDateString([], {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 export function isToday(utcDate: string) {
   const d = new Date(utcDate);
   const now = new Date();

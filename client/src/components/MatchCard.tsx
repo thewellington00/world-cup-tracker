@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
+import { Search } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TeamCrest } from "@/components/TeamCrest";
 import { cn } from "@/lib/utils";
 import type { Match, Team } from "@/lib/api";
-import { kickoffTime, statusLabel } from "@/lib/format";
+import { kickoffTime, shortDate, statusLabel } from "@/lib/format";
+
+function googleSearchUrl(home: string, away: string) {
+  const query = `${home} vs ${away} world cup`;
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+}
 
 function TeamName({
   team,
@@ -38,10 +44,28 @@ function TeamName({
   );
 }
 
-export function MatchCard({ match }: { match: Match }) {
+export function MatchCard({
+  match,
+  showDate = false,
+}: {
+  match: Match;
+  // When true (e.g. team fixture lists that aren't grouped by day), show the
+  // match date on the card.
+  showDate?: boolean;
+}) {
   const live = match.isLive;
   const finished = match.status === "FINISHED";
   const hasScore = match.score.home !== null && match.score.away !== null;
+
+  // Only link to Google once both opponents are known (skips TBD knockout slots).
+  const home = match.homeTeam;
+  const away = match.awayTeam;
+  const searchable = Boolean(home?.id && away?.id);
+  const googleLabel = live
+    ? "Live on Google"
+    : finished
+      ? "Results on Google"
+      : "Preview on Google";
 
   return (
     <Card
@@ -50,6 +74,11 @@ export function MatchCard({ match }: { match: Match }) {
         live && "border-destructive/60 ring-1 ring-destructive/30",
       )}
     >
+      {showDate && (
+        <div className="mb-2 text-xs font-semibold text-muted-foreground">
+          {shortDate(match.utcDate)}
+        </div>
+      )}
       <div className="mb-3 flex items-center justify-between">
         {live ? (
           <Badge variant="live" className="gap-1.5">
@@ -81,6 +110,20 @@ export function MatchCard({ match }: { match: Match }) {
         </div>
         <TeamName team={match.awayTeam} winner={finished && match.score.winner === "AWAY_TEAM"} side="away" />
       </div>
+
+      {searchable && (
+        <div className="mt-3 flex justify-end border-t pt-2">
+          <a
+            href={googleSearchUrl(home!.name, away!.name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Search className="h-3 w-3" />
+            {googleLabel}
+          </a>
+        </div>
+      )}
     </Card>
   );
 }
