@@ -1,0 +1,182 @@
+{
+  "matches": {
+    "matches": [
+      {
+        "id": 1001, "utcDate": "2026-06-12T18:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group A", "matchday": 1,
+        "homeTeam": { "id": 1, "name": "Mexico", "tla": "MEX", "crest": "https://flagcdn.com/w160/mx.png" },
+        "awayTeam": { "id": 2, "name": "Croatia", "tla": "CRO", "crest": "https://flagcdn.com/w160/hr.png" },
+        "score": { "winner": "HOME_TEAM", "fullTime": { "home": 2, "away": 1 } }
+      },
+      {
+        "id": 1002, "utcDate": "2026-06-12T21:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group A", "matchday": 1,
+        "homeTeam": { "id": 3, "name": "Ecuador", "tla": "ECU", "crest": "https://flagcdn.com/w160/ec.png" },
+        "awayTeam": { "id": 4, "name": "Morocco", "tla": "MAR", "crest": "https://flagcdn.com/w160/ma.png" },
+        "score": { "winner": "DRAW", "fullTime": { "home": 0, "away": 0 } }
+      },
+      {
+        "id": 1003, "utcDate": "2026-06-16T18:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group A", "matchday": 2,
+        "homeTeam": { "id": 1, "name": "Mexico", "tla": "MEX", "crest": "https://flagcdn.com/w160/mx.png" },
+        "awayTeam": { "id": 3, "name": "Ecuador", "tla": "ECU", "crest": "https://flagcdn.com/w160/ec.png" },
+        "score": { "winner": "HOME_TEAM", "fullTime": { "home": 1, "away": 0 } }
+      },
+      {
+        "id": 1004, "utcDate": "2026-06-16T21:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group A", "matchday": 2,
+        "homeTeam": { "id": 2, "name": "Croatia", "tla": "CRO", "crest": "https://flagcdn.com/w160/hr.png" },
+        "awayTeam": { "id": 4, "name": "Morocco", "tla": "MAR", "crest": "https://flagcdn.com/w160/ma.png" },
+        "score": { "winner": "HOME_TEAM", "fullTime": { "home": 2, "away": 1 } }
+      },
+      {
+        "id": 1005, "utcDate": "2026-06-17T19:00:00Z", "status": "IN_PLAY", "minute": 67,
+        "stage": "GROUP_STAGE", "group": "Group A", "matchday": 3,
+        "homeTeam": { "id": 1, "name": "Mexico", "tla": "MEX", "crest": "https://flagcdn.com/w160/mx.png" },
+        "awayTeam": { "id": 4, "name": "Morocco", "tla": "MAR", "crest": "https://flagcdn.com/w160/ma.png" },
+        "score": { "winner": null, "fullTime": { "home": 1, "away": 0 } }
+      },
+      {
+        "id": 1006, "utcDate": "2026-06-17T22:00:00Z", "status": "TIMED",
+        "stage": "GROUP_STAGE", "group": "Group A", "matchday": 3,
+        "homeTeam": { "id": 2, "name": "Croatia", "tla": "CRO", "crest": "https://flagcdn.com/w160/hr.png" },
+        "awayTeam": { "id": 3, "name": "Ecuador", "tla": "ECU", "crest": "https://flagcdn.com/w160/ec.png" },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 1007, "utcDate": "2026-06-13T18:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group B", "matchday": 1,
+        "homeTeam": { "id": 5, "name": "Belgium", "tla": "BEL", "crest": "https://flagcdn.com/w160/be.png" },
+        "awayTeam": { "id": 6, "name": "Japan", "tla": "JPN", "crest": "https://flagcdn.com/w160/jp.png" },
+        "score": { "winner": "HOME_TEAM", "fullTime": { "home": 1, "away": 0 } }
+      },
+      {
+        "id": 1008, "utcDate": "2026-06-13T21:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group B", "matchday": 1,
+        "homeTeam": { "id": 7, "name": "Canada", "tla": "CAN", "crest": "https://flagcdn.com/w160/ca.png" },
+        "awayTeam": { "id": 8, "name": "Tunisia", "tla": "TUN", "crest": "https://flagcdn.com/w160/tn.png" },
+        "score": { "winner": "HOME_TEAM", "fullTime": { "home": 2, "away": 1 } }
+      },
+      {
+        "id": 1009, "utcDate": "2026-06-16T15:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group B", "matchday": 2,
+        "homeTeam": { "id": 5, "name": "Belgium", "tla": "BEL", "crest": "https://flagcdn.com/w160/be.png" },
+        "awayTeam": { "id": 7, "name": "Canada", "tla": "CAN", "crest": "https://flagcdn.com/w160/ca.png" },
+        "score": { "winner": "DRAW", "fullTime": { "home": 2, "away": 2 } }
+      },
+      {
+        "id": 1010, "utcDate": "2026-06-16T18:00:00Z", "status": "FINISHED",
+        "stage": "GROUP_STAGE", "group": "Group B", "matchday": 2,
+        "homeTeam": { "id": 6, "name": "Japan", "tla": "JPN", "crest": "https://flagcdn.com/w160/jp.png" },
+        "awayTeam": { "id": 8, "name": "Tunisia", "tla": "TUN", "crest": "https://flagcdn.com/w160/tn.png" },
+        "score": { "winner": "HOME_TEAM", "fullTime": { "home": 3, "away": 1 } }
+      },
+      {
+        "id": 1011, "utcDate": "2026-06-17T16:00:00Z", "status": "PAUSED", "minute": 45,
+        "stage": "GROUP_STAGE", "group": "Group B", "matchday": 3,
+        "homeTeam": { "id": 6, "name": "Japan", "tla": "JPN", "crest": "https://flagcdn.com/w160/jp.png" },
+        "awayTeam": { "id": 7, "name": "Canada", "tla": "CAN", "crest": "https://flagcdn.com/w160/ca.png" },
+        "score": { "winner": null, "fullTime": { "home": 1, "away": 1 } }
+      },
+      {
+        "id": 1012, "utcDate": "2026-06-17T19:00:00Z", "status": "TIMED",
+        "stage": "GROUP_STAGE", "group": "Group B", "matchday": 3,
+        "homeTeam": { "id": 5, "name": "Belgium", "tla": "BEL", "crest": "https://flagcdn.com/w160/be.png" },
+        "awayTeam": { "id": 8, "name": "Tunisia", "tla": "TUN", "crest": "https://flagcdn.com/w160/tn.png" },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2001, "utcDate": "2026-06-28T18:00:00Z", "status": "TIMED",
+        "stage": "LAST_16", "group": null,
+        "homeTeam": { "id": null, "name": "Winner Group A", "crest": null },
+        "awayTeam": { "id": null, "name": "Runner-up Group B", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2002, "utcDate": "2026-06-28T21:00:00Z", "status": "TIMED",
+        "stage": "LAST_16", "group": null,
+        "homeTeam": { "id": null, "name": "Winner Group B", "crest": null },
+        "awayTeam": { "id": null, "name": "Runner-up Group A", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2003, "utcDate": "2026-06-29T18:00:00Z", "status": "TIMED",
+        "stage": "LAST_16", "group": null,
+        "homeTeam": { "id": null, "name": "Winner Group C", "crest": null },
+        "awayTeam": { "id": null, "name": "Runner-up Group D", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2004, "utcDate": "2026-06-29T21:00:00Z", "status": "TIMED",
+        "stage": "LAST_16", "group": null,
+        "homeTeam": { "id": null, "name": "Winner Group D", "crest": null },
+        "awayTeam": { "id": null, "name": "Runner-up Group C", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2005, "utcDate": "2026-07-04T18:00:00Z", "status": "TIMED",
+        "stage": "QUARTER_FINALS", "group": null,
+        "homeTeam": { "id": null, "name": "Winner Match 49", "crest": null },
+        "awayTeam": { "id": null, "name": "Winner Match 50", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2006, "utcDate": "2026-07-05T18:00:00Z", "status": "TIMED",
+        "stage": "QUARTER_FINALS", "group": null,
+        "homeTeam": { "id": null, "name": "Winner Match 51", "crest": null },
+        "awayTeam": { "id": null, "name": "Winner Match 52", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2007, "utcDate": "2026-07-08T20:00:00Z", "status": "TIMED",
+        "stage": "SEMI_FINALS", "group": null,
+        "homeTeam": { "id": null, "name": "Winner QF1", "crest": null },
+        "awayTeam": { "id": null, "name": "Winner QF2", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2008, "utcDate": "2026-07-09T20:00:00Z", "status": "TIMED",
+        "stage": "SEMI_FINALS", "group": null,
+        "homeTeam": { "id": null, "name": "Winner QF3", "crest": null },
+        "awayTeam": { "id": null, "name": "Winner QF4", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2009, "utcDate": "2026-07-11T18:00:00Z", "status": "TIMED",
+        "stage": "THIRD_PLACE", "group": null,
+        "homeTeam": { "id": null, "name": "Loser SF1", "crest": null },
+        "awayTeam": { "id": null, "name": "Loser SF2", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      },
+      {
+        "id": 2010, "utcDate": "2026-07-12T18:00:00Z", "status": "TIMED",
+        "stage": "FINAL", "group": null,
+        "homeTeam": { "id": null, "name": "Winner SF1", "crest": null },
+        "awayTeam": { "id": null, "name": "Winner SF2", "crest": null },
+        "score": { "winner": null, "fullTime": { "home": null, "away": null } }
+      }
+    ]
+  },
+  "standings": {
+    "standings": [
+      {
+        "stage": "GROUP_STAGE", "type": "TOTAL", "group": "Group A",
+        "table": [
+          { "position": 1, "team": { "id": 1, "name": "Mexico", "crest": "https://flagcdn.com/w160/mx.png" }, "playedGames": 2, "won": 2, "draw": 0, "lost": 0, "points": 6, "goalsFor": 3, "goalsAgainst": 1, "goalDifference": 2 },
+          { "position": 2, "team": { "id": 2, "name": "Croatia", "crest": "https://flagcdn.com/w160/hr.png" }, "playedGames": 2, "won": 1, "draw": 0, "lost": 1, "points": 3, "goalsFor": 3, "goalsAgainst": 3, "goalDifference": 0 },
+          { "position": 3, "team": { "id": 4, "name": "Morocco", "crest": "https://flagcdn.com/w160/ma.png" }, "playedGames": 2, "won": 0, "draw": 1, "lost": 1, "points": 1, "goalsFor": 1, "goalsAgainst": 2, "goalDifference": -1 },
+          { "position": 4, "team": { "id": 3, "name": "Ecuador", "crest": "https://flagcdn.com/w160/ec.png" }, "playedGames": 2, "won": 0, "draw": 1, "lost": 1, "points": 1, "goalsFor": 0, "goalsAgainst": 1, "goalDifference": -1 }
+        ]
+      },
+      {
+        "stage": "GROUP_STAGE", "type": "TOTAL", "group": "Group B",
+        "table": [
+          { "position": 1, "team": { "id": 7, "name": "Canada", "crest": "https://flagcdn.com/w160/ca.png" }, "playedGames": 2, "won": 1, "draw": 1, "lost": 0, "points": 4, "goalsFor": 4, "goalsAgainst": 3, "goalDifference": 1 },
+          { "position": 2, "team": { "id": 5, "name": "Belgium", "crest": "https://flagcdn.com/w160/be.png" }, "playedGames": 2, "won": 1, "draw": 1, "lost": 0, "points": 4, "goalsFor": 3, "goalsAgainst": 2, "goalDifference": 1 },
+          { "position": 3, "team": { "id": 6, "name": "Japan", "crest": "https://flagcdn.com/w160/jp.png" }, "playedGames": 2, "won": 1, "draw": 0, "lost": 1, "points": 3, "goalsFor": 3, "goalsAgainst": 2, "goalDifference": 1 },
+          { "position": 4, "team": { "id": 8, "name": "Tunisia", "crest": "https://flagcdn.com/w160/tn.png" }, "playedGames": 2, "won": 0, "draw": 0, "lost": 2, "points": 0, "goalsFor": 2, "goalsAgainst": 5, "goalDifference": -3 }
+        ]
+      }
+    ]
+  }
+}
