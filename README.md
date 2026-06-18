@@ -33,6 +33,33 @@ sample dataset (you'll see a "sample data" banner).
 > The free tier is rate-limited (~10 requests/minute). The server caches match
 > data for ~25s and standings for ~5min, so the UI can poll freely.
 
+## Deploy (Render)
+
+The repo ships a [`render.yaml`](./render.yaml) Blueprint. One web service builds
+the frontend and serves it from the Express API, so there's a single origin and
+the in-memory cache keeps us under the football-data.org rate limit.
+
+1. Push this repo to GitHub.
+2. On [render.com](https://render.com): **New + → Blueprint**, select the repo.
+   Render reads `render.yaml` and provisions the service:
+   - Build: `npm ci --include=dev && npm run build`
+   - Start: `npm run start` (Express serves `client/dist` + `/api`)
+   - Health check: `/api/health`
+3. Add the `FOOTBALL_DATA_API_KEY` env var in the dashboard for live data
+   (omit it and the deploy runs on sample data).
+
+> The free plan spins down after ~15 min idle, so the first request after a lull
+> takes ~30–50s to wake. Once warm it's snappy. Upgrade to a paid instance (or
+> use Fly.io) if you want no cold starts.
+
+To verify a production build locally:
+
+```bash
+npm run build                       # builds client/dist
+npm run start                       # Express serves the built app on :4000
+# open http://localhost:4000
+```
+
 ## Layout
 
 ```
