@@ -1,0 +1,20 @@
+# Render Blueprint — one always-on web service that builds the frontend and
+# serves it from the Express API (single origin). Deploy via render.com →
+# "New +" → "Blueprint" and point it at this repo, or import render.yaml.
+services:
+  - type: web
+    name: world-cup-tracker
+    runtime: node
+    plan: free
+    region: oregon
+    # --include=dev so Vite/TypeScript (devDependencies) are available to build.
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      # Paste your football-data.org token in the Render dashboard (sync: false
+      # keeps it out of git). Without it the app still runs on sample data.
+      - key: FOOTBALL_DATA_API_KEY
+        sync: false
+      - key: NODE_VERSION
+        value: "22"

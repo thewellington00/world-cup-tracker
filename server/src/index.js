@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { cached } from "./cache.js";
 import { hasApiKey, getRawMatches, getRawStandings } from "./providers/footballData.js";
@@ -126,6 +128,19 @@ app.get("/api/teams/:id", async (req, res, next) => {
     next(err);
   }
 });
+
+// In production we serve the built frontend from the same service (single
+// origin, so the client's relative /api calls just work). Skipped in dev,
+// where Vite serves the client and proxies /api here.
+const clientDist = fileURLToPath(new URL("../../client/dist", import.meta.url));
+if (existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  // SPA fallback: let React Router handle any non-API route.
+  app.get(/^\/(?!api\/).*/, (_req, res) => {
+    res.sendFile(path.join(clientDist, "index.html"));
+  });
+  console.log(`[wc] serving frontend from ${clientDist}`);
+}
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
