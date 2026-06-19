@@ -17,6 +17,15 @@ export type MatchStatus =
   | "POSTPONED"
   | "CANCELLED";
 
+export type MatchDuration = "REGULAR" | "EXTRA_TIME" | "PENALTY_SHOOTOUT";
+
+export interface Score {
+  home: number | null;
+  away: number | null;
+  winner: string | null;
+  duration: MatchDuration | null;
+}
+
 export interface Match {
   id: number;
   utcDate: string;
@@ -28,7 +37,7 @@ export interface Match {
   minute: number | null;
   homeTeam: Team | null;
   awayTeam: Team | null;
-  score: { home: number | null; away: number | null; winner: string | null };
+  score: Score;
 }
 
 export interface StandingRow {

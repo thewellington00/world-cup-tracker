@@ -55,6 +55,37 @@ export function statusLabel(match: Match): string {
   }
 }
 
+// Note for how a result was reached, shown next to a finished score. Returns
+// null for a normal 90-minute result (the common case, no annotation needed).
+export function durationNote(match: Match): string | null {
+  switch (match.score.duration) {
+    case "EXTRA_TIME":
+      return "AET";
+    case "PENALTY_SHOOTOUT":
+      return "on penalties";
+    default:
+      return null;
+  }
+}
+
+// Display label for a match group. The upstream API uses "GROUP_A"; the
+// standings feed uses "Group A". Normalize both to "Group A".
+export function groupLabel(group: string): string {
+  return group
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// Stable anchor slug for a group, shared by match-card links and the standings
+// page (e.g. both "GROUP_A" and "Group A" -> "group-a").
+export function groupSlug(group: string): string {
+  return group
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 const STAGE_LABELS: Record<string, string> = {
   GROUP_STAGE: "Group Stage",
   LAST_16: "Round of 16",

@@ -4,14 +4,15 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TeamCrest } from "@/components/TeamCrest";
 import { cn } from "@/lib/utils";
-import { stageLabel, kickoffTime } from "@/lib/format";
+import { stageLabel, kickoffTime, durationNote } from "@/lib/format";
 
 function BracketMatch({ match }: { match: Match }) {
   const finished = match.status === "FINISHED";
+  const note = finished ? durationNote(match) : null;
   return (
     <Card className="w-60 p-3 text-sm">
       <div className="mb-1.5 text-[11px] uppercase tracking-wide text-muted-foreground">
-        {finished ? "Full time" : kickoffTime(match.utcDate)}
+        {finished ? (note ? `Full time · ${note}` : "Full time") : kickoffTime(match.utcDate)}
       </div>
       <BracketSide team={match.homeTeam} score={match.score.home} win={match.score.winner === "HOME_TEAM"} />
       <BracketSide team={match.awayTeam} score={match.score.away} win={match.score.winner === "AWAY_TEAM"} />
