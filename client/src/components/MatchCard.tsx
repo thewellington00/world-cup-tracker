@@ -5,7 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { TeamCrest } from "@/components/TeamCrest";
 import { cn } from "@/lib/utils";
 import type { Match, Team } from "@/lib/api";
-import { kickoffTime, shortDate, statusLabel } from "@/lib/format";
+import {
+  durationNote,
+  groupLabel,
+  groupSlug,
+  kickoffTime,
+  shortDate,
+  statusLabel,
+} from "@/lib/format";
 
 function googleSearchUrl(home: string, away: string) {
   const query = `${home} vs ${away} world cup`;
@@ -57,6 +64,10 @@ export function MatchCard({
   const finished = match.status === "FINISHED";
   const hasScore = match.score.home !== null && match.score.away !== null;
 
+  // Extra context shown under the score: how a finished result was reached
+  // (AET / pens). Null for a normal 90-minute result.
+  const scoreDetail = finished ? durationNote(match) : null;
+
   // Only link to Google once both opponents are known (skips TBD knockout slots).
   const home = match.homeTeam;
   const away = match.awayTeam;
@@ -90,9 +101,16 @@ export function MatchCard({
         ) : (
           <Badge variant="outline">{kickoffTime(match.utcDate)}</Badge>
         )}
-        <span className="text-xs text-muted-foreground">
-          {match.group ?? "Upcoming"}
-        </span>
+        {match.group ? (
+          <Link
+            to={`/standings#${groupSlug(match.group)}`}
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground hover:underline"
+          >
+            {groupLabel(match.group)}
+          </Link>
+        ) : (
+          <span className="text-xs text-muted-foreground">Upcoming</span>
+        )}
       </div>
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
@@ -110,6 +128,12 @@ export function MatchCard({
         </div>
         <TeamName team={match.awayTeam} winner={finished && match.score.winner === "AWAY_TEAM"} side="away" />
       </div>
+
+      {scoreDetail && (
+        <div className="mt-1.5 text-center text-xs text-muted-foreground tabular-nums">
+          {scoreDetail}
+        </div>
+      )}
 
       {searchable && (
         <div className="mt-3 flex justify-end border-t pt-2">

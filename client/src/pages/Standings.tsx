@@ -1,5 +1,8 @@
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 import { fetchStandings, type GroupStanding } from "@/lib/api";
+import { groupSlug } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -14,9 +17,21 @@ import { TeamCrest } from "@/components/TeamCrest";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-function GroupTable({ group }: { group: GroupStanding }) {
+function GroupTable({
+  group,
+  highlighted,
+}: {
+  group: GroupStanding;
+  highlighted: boolean;
+}) {
   return (
-    <Card>
+    <Card
+      id={groupSlug(group.group)}
+      className={cn(
+        "scroll-mt-24 transition-shadow",
+        highlighted && "ring-2 ring-primary",
+      )}
+    >
       <CardHeader className="pb-2">
         <CardTitle className="text-base">{group.group}</CardTitle>
       </CardHeader>
@@ -85,6 +100,22 @@ export function Standings() {
     queryFn: fetchStandings,
   });
 
+  // When arriving via a match-card group link (e.g. /standings#group-a),
+  // scroll that group into view and flash a highlight that fades out.
+  const { hash } = useLocation();
+  const targetSlug = decodeURIComponent(hash.replace(/^#/, ""));
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!targetSlug || !data) return;
+    const el = document.getElementById(targetSlug);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveSlug(targetSlug);
+    const timer = setTimeout(() => setActiveSlug(null), 2000);
+    return () => clearTimeout(timer);
+  }, [targetSlug, data]);
+
   if (isLoading)
     return (
       <div className="grid gap-4 lg:grid-cols-2">
@@ -113,7 +144,11 @@ export function Standings() {
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
           {groups.map((g) => (
-            <GroupTable key={g.group} group={g} />
+            <GroupTable
+              key={g.group}
+              group={g}
+              highlighted={activeSlug === groupSlug(g.group)}
+            />
           ))}
         </div>
       )}

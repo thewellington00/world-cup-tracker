@@ -35,6 +35,8 @@ export function normalizeMatch(m) {
       home: full.home ?? null,
       away: full.away ?? null,
       winner: m.score?.winner ?? null,
+      // REGULAR | EXTRA_TIME | PENALTY_SHOOTOUT — how the result was reached.
+      duration: m.score?.duration ?? null,
     },
   };
 }
