@@ -23,9 +23,11 @@ export function Feed() {
   const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["matches"],
     queryFn: fetchMatches,
-    // Poll every 30s while any match is in progress; otherwise stay idle.
+    // Poll every 30s while any match is live; otherwise keep a slower 60s poll
+    // so matches that kick off after the page loads still get picked up. (The
+    // server caches upstream ~25s, so this stays well under the rate limit.)
     refetchInterval: (query) =>
-      query.state.data?.some((m) => m.isLive) ? 30_000 : false,
+      query.state.data?.some((m) => m.isLive) ? 30_000 : 60_000,
   });
 
   const todayRef = useRef<HTMLElement | null>(null);
@@ -82,29 +84,51 @@ export function Feed() {
   const matches = data ?? [];
   const liveCount = matches.filter((m) => m.isLive).length;
   const days = groupByDay(matches);
+  const hasToday = days.some(([, dayMatches]) => isToday(dayMatches[0].utcDate));
+
+  const liveBadge = liveCount > 0 && (
+    <Badge variant="live" className="gap-1.5 shadow-lg">
+      <span className="h-1.5 w-1.5 animate-pulse-ring rounded-full bg-current" />
+      {liveCount} live now
+    </Badge>
+  );
+
+  const refreshButton = (
+    <button
+      type="button"
+      onClick={() => refetch()}
+      disabled={isFetching}
+      className="inline-flex items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-medium shadow-lg transition-colors hover:bg-accent disabled:opacity-60"
+    >
+      <RefreshCw className={cn("h-4 w-4", isFetching && "animate-spin")} />
+      Refresh
+    </button>
+  );
+
+  // "Jump to today" is always present but passive once today is already in view
+  // (or there's no today section at all) — it only becomes an active control
+  // when today has scrolled off-screen.
+  const canJump = hasToday && showJump;
+  const jumpButton = (
+    <button
+      type="button"
+      onClick={scrollToToday}
+      disabled={!canJump}
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium shadow-lg transition-colors",
+        canJump
+          ? "bg-card hover:bg-accent"
+          : "cursor-default bg-card/60 text-muted-foreground",
+      )}
+    >
+      <LocateFixed className="h-4 w-4" />
+      {!hasToday ? "No matches today" : showJump ? "Jump to today" : "Viewing today"}
+    </button>
+  );
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Match Feed</h1>
-        <div className="flex items-center gap-3">
-          {liveCount > 0 && (
-            <Badge variant="live" className="gap-1.5">
-              <span className="h-1.5 w-1.5 animate-pulse-ring rounded-full bg-current" />
-              {liveCount} live now
-            </Badge>
-          )}
-          <button
-            type="button"
-            onClick={() => refetch()}
-            disabled={isFetching}
-            className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent disabled:opacity-60"
-          >
-            <RefreshCw className={cn("h-4 w-4", isFetching && "animate-spin")} />
-            Refresh
-          </button>
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold tracking-tight">Match Feed</h1>
 
       {days.map(([day, dayMatches]) => {
         const today = isToday(dayMatches[0].utcDate);
@@ -150,16 +174,11 @@ export function Feed() {
         );
       })}
 
-      {showJump && (
-        <button
-          type="button"
-          onClick={scrollToToday}
-          className="fixed bottom-6 left-1/2 z-20 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-medium shadow-lg transition-colors hover:bg-accent"
-        >
-          <LocateFixed className="h-4 w-4" />
-          Jump to today
-        </button>
-      )}
+      <div className="fixed bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
+        {liveBadge}
+        {jumpButton}
+        {refreshButton}
+      </div>
     </div>
   );
 }
