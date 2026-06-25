@@ -3,5 +3,8 @@ node_modules/
 dist/
 *.tsbuildinfo
 *.log
+
+.idea
+
 .env
 .env.local
