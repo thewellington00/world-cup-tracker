@@ -137,20 +137,23 @@ export function Standings() {
   return (
     <div className="space-y-6">
       <div>
-        {fromMatchId != null && (
-          <Link
-            to={`/#match-${fromMatchId}`}
-            className="mb-2 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to feed
-          </Link>
-        )}
         <h1 className="text-2xl font-bold tracking-tight">Group Standings</h1>
         <p className="text-sm text-muted-foreground">
           Top two of each group advance to the knockout stage.
         </p>
       </div>
+
+      {/* Floating pill so the return path stays visible even after the page
+          auto-scrolls to the tapped group (which pushes the header off-screen). */}
+      {fromMatchId != null && (
+        <Link
+          to={`/#match-${fromMatchId}`}
+          className="fixed bottom-6 left-1/2 z-20 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-medium shadow-lg transition-colors hover:bg-accent"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to feed
+        </Link>
+      )}
       {groups.length === 0 ? (
         <p className="text-sm text-muted-foreground">
           Standings aren't available yet.
