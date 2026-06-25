@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { fetchStandings, type GroupStanding } from "@/lib/api";
 import { groupSlug } from "@/lib/format";
@@ -102,8 +103,12 @@ export function Standings() {
 
   // When arriving via a match-card group link (e.g. /standings#group-a),
   // scroll that group into view and flash a highlight that fades out.
-  const { hash } = useLocation();
-  const targetSlug = decodeURIComponent(hash.replace(/^#/, ""));
+  const location = useLocation();
+  const targetSlug = decodeURIComponent(location.hash.replace(/^#/, ""));
+  // Set when we arrived from a feed match card; lets us offer a link back to
+  // that exact card rather than the top of the feed.
+  const fromMatchId = (location.state as { fromMatchId?: number } | null)
+    ?.fromMatchId;
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
 
   useEffect(() => {
@@ -137,6 +142,18 @@ export function Standings() {
           Top two of each group advance to the knockout stage.
         </p>
       </div>
+
+      {/* Floating pill so the return path stays visible even after the page
+          auto-scrolls to the tapped group (which pushes the header off-screen). */}
+      {fromMatchId != null && (
+        <Link
+          to={`/#match-${fromMatchId}`}
+          className="fixed bottom-6 left-1/2 z-20 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-medium shadow-lg transition-colors hover:bg-accent"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to feed
+        </Link>
+      )}
       {groups.length === 0 ? (
         <p className="text-sm text-muted-foreground">
           Standings aren't available yet.
