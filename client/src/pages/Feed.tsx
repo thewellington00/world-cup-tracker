@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 import { LocateFixed, RefreshCw } from "lucide-react";
 import { fetchMatches, type Match } from "@/lib/api";
 import { MatchCard } from "@/components/MatchCard";
@@ -30,13 +31,30 @@ export function Feed() {
   const todayRef = useRef<HTMLElement | null>(null);
   const didScrollRef = useRef(false);
   const [showJump, setShowJump] = useState(false);
+  const [flashId, setFlashId] = useState<string | null>(null);
 
-  // Once matches first load, jump the feed to today's section.
+  // A "#match-<id>" hash means we're returning from the standings page (via its
+  // "back to feed" link) and should land back on that exact card.
+  const { hash } = useLocation();
+  const returnMatchId = hash.startsWith("#match-") ? hash.slice(1) : null;
+
+  // Once matches first load, jump to the card we came back to (if any),
+  // otherwise to today's section.
   useEffect(() => {
-    if (!data || didScrollRef.current || !todayRef.current) return;
+    if (!data || didScrollRef.current) return;
+    if (returnMatchId) {
+      const el = document.getElementById(returnMatchId);
+      if (!el) return; // wait until the target card has rendered
+      didScrollRef.current = true;
+      el.scrollIntoView({ block: "center" });
+      setFlashId(returnMatchId);
+      const timer = setTimeout(() => setFlashId(null), 2000);
+      return () => clearTimeout(timer);
+    }
+    if (!todayRef.current) return;
     didScrollRef.current = true;
     todayRef.current.scrollIntoView({ block: "start" });
-  }, [data]);
+  }, [data, returnMatchId]);
 
   // Reveal the floating "jump to today" pill whenever today scrolls off-screen.
   useEffect(() => {
@@ -121,7 +139,11 @@ export function Feed() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {dayMatches.map((m) => (
-                <MatchCard key={m.id} match={m} />
+                <MatchCard
+                  key={m.id}
+                  match={m}
+                  highlighted={flashId === `match-${m.id}`}
+                />
               ))}
             </div>
           </section>

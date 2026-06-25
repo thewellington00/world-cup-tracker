@@ -55,11 +55,15 @@ function TeamName({
 export function MatchCard({
   match,
   showDate = false,
+  highlighted = false,
 }: {
   match: Match;
   // When true (e.g. team fixture lists that aren't grouped by day), show the
   // match date on the card.
   showDate?: boolean;
+  // Briefly ring-highlighted when the feed scrolls back to this card after a
+  // round trip to the standings (see Feed's "back to feed" handling).
+  highlighted?: boolean;
 }) {
   const live = match.isLive;
   const finished = match.status === "FINISHED";
@@ -81,9 +85,11 @@ export function MatchCard({
 
   return (
     <Card
+      id={`match-${match.id}`}
       className={cn(
-        "p-4 transition-colors",
+        "scroll-mt-24 p-4 transition-shadow",
         live && "border-destructive/60 ring-1 ring-destructive/30",
+        highlighted && "ring-2 ring-primary",
       )}
     >
       {showDate && (
@@ -105,6 +111,9 @@ export function MatchCard({
         {match.group ? (
           <Link
             to={`/standings#${groupSlug(match.group)}`}
+            // Remember which match this jump came from so the standings page can
+            // offer a "back to feed" link that returns to this exact card.
+            state={{ fromMatchId: match.id }}
             className="text-xs text-muted-foreground transition-colors hover:text-foreground hover:underline"
           >
             {groupLabel(match.group)}
