@@ -68,6 +68,12 @@ export function durationNote(match: Match): string | null {
   }
 }
 
+// Time-played label for a live match, shown near the score.
+export function liveClock(match: Match): string {
+  if (match.status === "PAUSED") return "HT";
+  return match.minute ? `${match.minute}'` : "LIVE";
+}
+
 // Display label for a match group. The upstream API uses "GROUP_A"; the
 // standings feed uses "Group A". Normalize both to "Group A".
 export function groupLabel(group: string): string {

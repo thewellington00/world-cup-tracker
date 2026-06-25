@@ -10,6 +10,7 @@ import {
   groupLabel,
   groupSlug,
   kickoffTime,
+  liveClock,
   shortDate,
   statusLabel,
 } from "@/lib/format";
@@ -94,7 +95,7 @@ export function MatchCard({
         {live ? (
           <Badge variant="live" className="gap-1.5">
             <span className="h-1.5 w-1.5 animate-pulse-ring rounded-full bg-current" />
-            {statusLabel(match)}
+            LIVE
           </Badge>
         ) : finished ? (
           <Badge variant="secondary">{statusLabel(match)}</Badge>
@@ -115,7 +116,7 @@ export function MatchCard({
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
         <TeamName team={match.homeTeam} winner={finished && match.score.winner === "HOME_TEAM"} side="home" />
-        <div className="flex items-center justify-center gap-2 px-2">
+        <div className="flex flex-col items-center justify-center gap-1 px-2">
           {hasScore ? (
             <span className="text-xl font-bold tabular-nums">
               {match.score.home}
@@ -124,6 +125,12 @@ export function MatchCard({
             </span>
           ) : (
             <span className="text-sm text-muted-foreground">vs</span>
+          )}
+          {live && (
+            <span className="flex items-center gap-1 text-xs font-semibold text-destructive">
+              <span className="h-1.5 w-1.5 animate-pulse-ring rounded-full bg-current" />
+              {liveClock(match)}
+            </span>
           )}
         </div>
         <TeamName team={match.awayTeam} winner={finished && match.score.winner === "AWAY_TEAM"} side="away" />

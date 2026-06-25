@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { LocateFixed } from "lucide-react";
+import { LocateFixed, RefreshCw } from "lucide-react";
 import { fetchMatches, type Match } from "@/lib/api";
 import { MatchCard } from "@/components/MatchCard";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +19,7 @@ function groupByDay(matches: Match[]) {
 }
 
 export function Feed() {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["matches"],
     queryFn: fetchMatches,
     // Poll every 30s while any match is in progress; otherwise stay idle.
@@ -69,12 +69,23 @@ export function Feed() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Match Feed</h1>
-        {liveCount > 0 && (
-          <Badge variant="live" className="gap-1.5">
-            <span className="h-1.5 w-1.5 animate-pulse-ring rounded-full bg-current" />
-            {liveCount} live now
-          </Badge>
-        )}
+        <div className="flex items-center gap-3">
+          {liveCount > 0 && (
+            <Badge variant="live" className="gap-1.5">
+              <span className="h-1.5 w-1.5 animate-pulse-ring rounded-full bg-current" />
+              {liveCount} live now
+            </Badge>
+          )}
+          <button
+            type="button"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent disabled:opacity-60"
+          >
+            <RefreshCw className={cn("h-4 w-4", isFetching && "animate-spin")} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {days.map(([day, dayMatches]) => {
