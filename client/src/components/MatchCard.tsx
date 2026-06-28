@@ -12,6 +12,7 @@ import {
   kickoffTime,
   liveClock,
   shortDate,
+  stageLabel,
   statusLabel,
 } from "@/lib/format";
 
@@ -117,6 +118,15 @@ export function MatchCard({
             className="text-xs text-muted-foreground transition-colors hover:text-foreground hover:underline"
           >
             {groupLabel(match.group)}
+          </Link>
+        ) : match.stage && match.stage !== "GROUP_STAGE" ? (
+          // Knockout ties have no group; show the round and link to this exact
+          // match in the bracket (which scrolls to and flashes it).
+          <Link
+            to={`/bracket#match-${match.id}`}
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground hover:underline"
+          >
+            {stageLabel(match.stage)}
           </Link>
         ) : (
           <span className="text-xs text-muted-foreground">Upcoming</span>
