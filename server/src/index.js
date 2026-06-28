@@ -15,6 +15,7 @@ const SAMPLE = JSON.parse(await readFile(fileURLToPath(sampleUrl), "utf8"));
 
 // Knockout stages in bracket order.
 const KNOCKOUT_ORDER = [
+  "LAST_32",
   "LAST_16",
   "QUARTER_FINALS",
   "SEMI_FINALS",
