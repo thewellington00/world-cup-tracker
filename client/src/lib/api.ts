@@ -5,6 +5,9 @@ export interface Team {
   name: string;
   tla?: string | null;
   crest: string | null;
+  // FIFA world ranking going into the tournament (null for teams we have no
+  // ranking for). Sourced server-side from a static table.
+  ranking?: number | null;
 }
 
 export type MatchStatus =
@@ -24,6 +27,9 @@ export interface Score {
   away: number | null;
   winner: string | null;
   duration: MatchDuration | null;
+  // Shootout score when the tie was decided on penalties; null otherwise. The
+  // `home`/`away` above stay the on-pitch (post-extra-time) score.
+  penalties?: { home: number | null; away: number | null } | null;
 }
 
 export interface Match {
