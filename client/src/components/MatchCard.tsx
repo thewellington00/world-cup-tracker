@@ -11,6 +11,7 @@ import {
   groupSlug,
   kickoffTime,
   liveClock,
+  penaltyScore,
   shortDate,
   stageLabel,
   statusLabel,
@@ -32,7 +33,17 @@ function TeamName({
 }) {
   const name = team?.name ?? "TBD";
   const label = (
-    <span className={cn("truncate", winner && "font-semibold")}>{name}</span>
+    <span className="flex min-w-0 items-center gap-1.5">
+      <span className={cn("truncate", winner && "font-semibold")}>{name}</span>
+      {team?.ranking != null && (
+        <span
+          className="shrink-0 text-[11px] font-medium tabular-nums text-muted-foreground"
+          title="FIFA ranking"
+        >
+          #{team.ranking}
+        </span>
+      )}
+    </span>
   );
   return (
     <div
@@ -71,8 +82,10 @@ export function MatchCard({
   const hasScore = match.score.home !== null && match.score.away !== null;
 
   // Extra context shown under the score: how a finished result was reached
-  // (AET / pens). Null for a normal 90-minute result.
+  // (AET). Null for a normal 90-minute result.
   const scoreDetail = finished ? durationNote(match) : null;
+  // Shootout score, shown in parentheses next to the on-pitch score.
+  const pens = penaltyScore(match);
 
   // Only link to Google once both opponents are known (skips TBD knockout slots).
   const home = match.homeTeam;
@@ -137,11 +150,18 @@ export function MatchCard({
         <TeamName team={match.homeTeam} winner={finished && match.score.winner === "HOME_TEAM"} side="home" />
         <div className="flex flex-col items-center justify-center gap-1 px-2">
           {hasScore ? (
-            <span className="text-xl font-bold tabular-nums">
-              {match.score.home}
-              <span className="mx-1.5 text-muted-foreground">–</span>
-              {match.score.away}
-            </span>
+            <div className="flex flex-col items-center">
+              <span className="text-xl font-bold tabular-nums">
+                {match.score.home}
+                <span className="mx-1.5 text-muted-foreground">–</span>
+                {match.score.away}
+              </span>
+              {pens && (
+                <span className="text-xs font-semibold tabular-nums text-muted-foreground">
+                  ({pens})
+                </span>
+              )}
+            </div>
           ) : (
             <span className="text-sm text-muted-foreground">vs</span>
           )}

@@ -57,15 +57,24 @@ export function statusLabel(match: Match): string {
 
 // Note for how a result was reached, shown next to a finished score. Returns
 // null for a normal 90-minute result (the common case, no annotation needed).
+// Penalty shootouts are conveyed by the shootout score itself (see
+// `penaltyScore`), so they aren't annotated here.
 export function durationNote(match: Match): string | null {
   switch (match.score.duration) {
     case "EXTRA_TIME":
       return "AET";
-    case "PENALTY_SHOOTOUT":
-      return "on penalties";
     default:
       return null;
   }
+}
+
+// Compact shootout score (e.g. "4–2 pens") for a tie decided on penalties, or
+// null otherwise. The `home`/`away` score stays the on-pitch result; this is
+// shown alongside it in parentheses.
+export function penaltyScore(match: Match): string | null {
+  const pens = match.score.penalties;
+  if (!pens || pens.home == null || pens.away == null) return null;
+  return `${pens.home}–${pens.away} pens`;
 }
 
 // Time-played label for a live match, shown near the score.

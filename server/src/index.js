@@ -23,6 +23,65 @@ const KNOCKOUT_ORDER = [
   "FINAL",
 ];
 
+// The rounds that flow into one another on the way to the final (the
+// third-place play-off sits outside this spine).
+const BRACKET_SPINE = [
+  "LAST_32",
+  "LAST_16",
+  "QUARTER_FINALS",
+  "SEMI_FINALS",
+  "FINAL",
+];
+
+function winnerTeam(match) {
+  if (!match) return null;
+  if (match.score.winner === "HOME_TEAM") return match.homeTeam;
+  if (match.score.winner === "AWAY_TEAM") return match.awayTeam;
+  return null;
+}
+
+function loserTeam(match) {
+  if (!match) return null;
+  if (match.score.winner === "HOME_TEAM") return match.awayTeam;
+  if (match.score.winner === "AWAY_TEAM") return match.homeTeam;
+  return null;
+}
+
+function isTbd(team) {
+  return !team || team.id == null;
+}
+
+// The upstream feed doesn't always advance a tie's winner into the next round —
+// notably penalty shootouts, where its own `winner` is null — leaving the slot
+// as "TBD" even though we've derived who won. Fill those empty slots ourselves:
+// along the spine, tie i is fed by ties 2i and 2i+1 (lower id takes the home
+// slot); the third-place match takes the two semi-final losers. We only ever
+// fill a slot the feed left empty, so a result it already set stays untouched.
+function advanceWinners(rounds) {
+  const byStage = new Map(rounds.map((r) => [r.stage, r.matches]));
+  const spine = BRACKET_SPINE.map((s) => byStage.get(s)).filter(Boolean);
+  for (let r = 0; r < spine.length - 1; r++) {
+    const left = spine[r];
+    const right = spine[r + 1];
+    if (left.length !== right.length * 2) continue; // only clean halvings
+    for (let i = 0; i < right.length; i++) {
+      const next = right[i];
+      const home = winnerTeam(left[2 * i]);
+      const away = winnerTeam(left[2 * i + 1]);
+      if (home && isTbd(next.homeTeam)) next.homeTeam = home;
+      if (away && isTbd(next.awayTeam)) next.awayTeam = away;
+    }
+  }
+
+  const sf = byStage.get("SEMI_FINALS");
+  const third = byStage.get("THIRD_PLACE");
+  if (sf?.length === 2 && third?.length === 1) {
+    const [a, b] = sf.map(loserTeam);
+    if (a && isTbd(third[0].homeTeam)) third[0].homeTeam = a;
+    if (b && isTbd(third[0].awayTeam)) third[0].awayTeam = b;
+  }
+}
+
 // The sample fixtures are authored around this date (its live matchday). When
 // serving sample data we shift every fixture by whole days so the "live"
 // matchday always lands on today — keeping the no-API-key demo current.
@@ -102,8 +161,15 @@ app.get("/api/bracket", async (_req, res, next) => {
     const { matches, source } = await getMatches();
     const rounds = KNOCKOUT_ORDER.map((stage) => ({
       stage,
-      matches: matches.filter((m) => m.stage === stage),
+      // Order ties by match id, not kickoff time: within a knockout round the
+      // upstream ids run in bracket-slot order, so this lines each tie up with
+      // its feeders one round earlier (tie i is fed by ties 2i and 2i+1). The
+      // shared match list is sorted by date, which would scramble that.
+      matches: matches
+        .filter((m) => m.stage === stage)
+        .sort((a, b) => a.id - b.id),
     })).filter((round) => round.matches.length > 0);
+    advanceWinners(rounds);
     res.set("X-Data-Source", source);
     res.json(rounds);
   } catch (err) {
